@@ -41,3 +41,17 @@ export const watchPosition = (onUpdate) => {
   )
   return id
 }
+
+export async function getGeoPermitStatus() {
+  await navigator.permissions
+    .query({
+      name: "geolocation",
+    })
+    .then((res) => {
+      const st = res.state
+
+      if (!st) throw new Error("위치 허용 상태값 받아오기 실패")
+
+      return st === "granted" ? true : false
+    })
+}

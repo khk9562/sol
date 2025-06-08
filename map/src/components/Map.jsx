@@ -16,6 +16,18 @@ const MapComp = () => {
         ref={mapRef}
         style={{ width: "1143px", height: "594px" }}
       />
+
+      <div className={styles.btns}>
+        {!isRecording ? (
+          <button type='button' onClick={startTracking}>
+            기록
+          </button>
+        ) : (
+          <button type='button' onClick={endTracking}>
+            정지
+          </button>
+        )}
+      </div>
     </article>
   )
 }

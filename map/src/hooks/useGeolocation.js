@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react"
-import { getCurrentPosition, watchPosition } from "../utils/location"
+import {
+  getCurrentPosition,
+  watchPosition,
+  getGeoPermitStatus,
+} from "../utils/location"
+
 // CHECK: 굳이 getCurrentPosition이 필요한가?
 // watchPostion 과의 차이점은 정확도 보다 속도면에서 우월,
 
@@ -16,22 +21,19 @@ export default function useGeolocation() {
 
   // 위치 추적 시작
   const startTracking = async () => {
-    if (navigator.geolocation) {
-      // TODO: 위치 서비스 제공 수락
-      alert("위치 서비스 제공에 동의해주세요!")
-      return
-    }
-
     try {
-      const firstRoute = getCurrentPosition()
-      console.log("firstRoute", firstRoute)
+      const isPermitted = await getGeoPermitStatus()
+      if (!isPermitted) throw new Error("위치 서비스 제공에 동의해 주세요.")
+
+      //   CHECK: 처음 시작 위치 필요한지 체크
+      //   const firstRoute = getCurrentPosition()
+      //   console.log("firstRoute", firstRoute)
 
       setIsRecording(true)
 
       const watchID = watchPosition(handleUpdateRoutes)
-      setWatchId(watchID)
-
       if (!watchID) throw new Error("기록에 실패하였습니다.")
+      setWatchId(watchID)
     } catch (error) {
       console.error(error)
       setIsRecording(false)
@@ -41,7 +43,8 @@ export default function useGeolocation() {
 
   const endTracking = () => {
     try {
-      const lastRoute = getCurrentPosition()
+      //   CHECK: 처음 시작 위치 필요한지 체크
+      //   const lastRoute = getCurrentPosition()
       if (navigator.geolocation) {
         navigator.geolocation.clearWatch(watchId)
       }
