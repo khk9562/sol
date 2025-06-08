@@ -1,0 +1,5 @@
+.Map {
+  max-width: 840px;
+  width: 100%;
+  height: calc(100vh - 7rem);
+}
