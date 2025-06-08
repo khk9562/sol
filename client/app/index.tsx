@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react"
 import { StatusBar, SafeAreaView } from "react-native"
 import { MainStyles } from "@/app/style/main"
 import { CameraCapturedPicture, CameraView } from "expo-camera"
-import * as Location from "expo-location"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import {
   TabType,
@@ -15,10 +14,8 @@ import {
 import { getTimestampText } from "./utils/date"
 import useIntializedApp from "./hooks/useInitializeApp"
 
+import AppRouter from "./routes/AppRouter"
 import Tabs from "./components/Tabs"
-import Camera from "./components/Camera"
-import Album from "./screens/Album"
-import Setting from "./screens/Setting"
 import TimeStampEditor from "./screens/TimeStampEditor"
 
 const App: React.FC = () => {
@@ -93,31 +90,16 @@ const App: React.FC = () => {
   return (
     <SafeAreaView style={MainStyles.container}>
       <StatusBar barStyle='light-content' backgroundColor='#1a1a1a' />
-
-      {(() => {
-        switch (activeTab) {
-          case "camera":
-            return (
-              <Camera
-                cameraRef={cameraRef}
-                hasPermission={hasPermission}
-                setCurrentPhoto={setCurrentPhoto}
-                handleOpenTimeStampEditor={() => setShowTimestampEditor(true)}
-              />
-            )
-          case "album":
-            return <Album photos={photos} />
-          case "settings":
-            return (
-              <Setting
-                timestampSettings={timestampSettings}
-                setTimestampSettings={setTimestampSettings}
-              />
-            )
-          default:
-            return null
-        }
-      })()}
+      <AppRouter
+        activeTab={activeTab}
+        cameraRef={cameraRef}
+        hasPermission={hasPermission}
+        setCurrentPhoto={setCurrentPhoto}
+        handleOpenTimeStampEditor={() => setShowTimestampEditor(false)}
+        photos={photos}
+        timestampSettings={timestampSettings}
+        setTimestampSettings={setTimestampSettings}
+      />
 
       <TimeStampEditor
         show={showTimestampEditor}

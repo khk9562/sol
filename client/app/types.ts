@@ -73,3 +73,8 @@ export interface CameraComponentPros {
   >
   handleOpenTimeStampEditor: () => void
 }
+
+export interface AppRouterProps extends CameraComponentPros, SettingProps {
+  activeTab: TabType
+  photos: PhotoData[]
+}
